@@ -98,11 +98,12 @@ def run_model_training(dpc: str, mtc: str):
 
     # Save model
     logger.info(f"Saving trained model")
+    trained_models_path = os.path.join("src", "model_training", "trained_models")
+    if not os.path.exists(trained_models_path):
+        os.makedirs(trained_models_path)
     model.save(
         os.path.join(
-            "src",
-            "model_training",
-            "trained_models",
+            trained_models_path,
             f"{dpc[:-4]}_{mtc[:-4]}",
         )
     )

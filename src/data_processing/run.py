@@ -48,36 +48,38 @@ def run_data_processing(dpc: str):
         dfs[process] = pd.concat(dfs[process]).reset_index(drop=True)
 
     # Add filtered features if necessary
-    for feature in dpc_values["features"]:
+    features = json.loads(dpc_values["features"])
+    for feature in features:
         if "_MA" in feature:
             logger.info(f"Applying Moving Average filter")
             for process in ["train", "val", "test"]:
                 col_values_to_filter = dfs[process][feature.replace("_MA", "")]
-                window_size = dpc_values["ma_window_size"][feature]
+                window_size = json.loads(dpc_values["ma_window_size"])[feature]
                 dfs[process][feature] = get_ma(col_values_to_filter, window_size)
         if "_BWF" in feature:
             logger.info(f"Applying Butterworth filter")
             for process in ["train", "val", "test"]:
                 col_values_to_filter = dfs[process][feature.replace("_MA", "")]
-                cutoff_fs = dpc_values["bwf_cutoff_fs"][feature]
-                order = dpc_values["bwf_order"][feature]
+                cutoff_fs = json.loads(dpc_values["bwf_cutoff_fs"])[feature]
+                order = json.loads(dpc_values["bwf_order"])[feature]
                 dfs[process][feature] = get_bwf(col_values_to_filter, cutoff_fs, order)
         if "_H" in feature:
             logger.info(f"Applying Hampel filter")
             for process in ["train", "val", "test"]:
                 col_values_to_filter = dfs[process][feature.replace("_MA", "")]
-                window_size = dpc_values["h_window_size"][feature]
-                n = dpc_values["h_n"][feature]
+                window_size = json.loads(dpc_values["h_window_size"])[feature]
+                n = json.loads(dpc_values["h_n"])[feature]
                 dfs[process][feature] = get_bwf(col_values_to_filter, window_size, n)
 
     # Save processed data
     logger.info(f"Saving train, val, and test datasets")
+    processed_data_path = os.path.join("src", "data_processing", "processed_data")
+    if not os.path.exists(processed_data_path):
+        os.makedirs(processed_data_path)
     for process in ["train", "val", "test"]:
         dfs[process].to_csv(
             os.path.join(
-                "src",
-                "data_processing",
-                "processed_data",
+                processed_data_path,
                 f"{dpc[:-4]}_{process}.csv",
             ),
             index=False,

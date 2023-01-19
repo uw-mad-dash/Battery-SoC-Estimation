@@ -51,11 +51,12 @@ def run_inference(dpc: str, mtc: str):
 
     # Save results
     logger.info(f"Saving results")
+    results_path = os.path.join("src", "inference", "results")
+    if not os.path.exists(results_path):
+        os.makedirs(results_path)
     test_df.to_csv(
         os.path.join(
-            "src",
-            "inference",
-            "results",
+            results_path,
             f"{dpc[:-4]}_{mtc[:-4]}.csv",
         )
     )
