@@ -6,7 +6,6 @@ This repository contains the data and code for the paper [Estimating Battery Sta
   <a href="#data">Data 🗃️</a> •
   <a href="#installation">Installation 🛠️</a> •
   <a href="#quick-start">Quick Start 🚀</a> •
-  <a href="#hyperparameter-tuning">Hyperparameter Tuning ⚙️</a> •
   <a href="#contributing">Contributing 🐜</a> •
   <a href="#license">License ⚖️</a>
 </p>
@@ -25,12 +24,24 @@ The [LiPo 5450 mAh cell](https://maxamps.com/products/lipo-5450-1s-3-7v-battery)
 > __Note__
 > We used Python 3.8 and versions of dependencies specified in <em>requirements.txt</em>, but it is not necessary to follow exactly the same versions.
 
-We recommend using the package manager [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) to create isolated environment for development and install necessary dependencies inside of it.
+Create [Python virtual environment](https://docs.python.org/3/library/venv.html):
 
 ```console
-conda create -n battery-soc-estimation python=3.8
-conda activate battery-soc-estimation
-conda install --file requirements.txt
+python3.8 -m venv battery-soc-estimation-venv
+source  battery-soc-estimation-venv/bin/activate
+```
+
+[Fork the repo](https://docs.github.com/en/get-started/quickstart/fork-a-repo) and clone forked repo:
+
+```console
+git clone https://github.com/your_github_username/Battery-SoC-Estimation
+```
+
+Install dependencies:
+
+```console
+cd Battery-SoC-Estimation
+pip3 install -r requirements.txt
 ```
 
 ## Quick Start
@@ -38,7 +49,7 @@ conda install --file requirements.txt
 <strong>First of all, run data processing</strong>. This step creates training, validation, and test datasets. Besides that, it can add new features which are formed by applying filter to one of the existing features. In order to run data processing, you must specify the name of the <em>data processing configuration (dpc)</em> file which should be located in <em>src/data_processing/configs</em>:
 
 ```console
-python3 main.py -dpc=I_V_T.ini
+python3 main.py -r=data_processing -dpc=I_V_T.ini
 ```
 
 <details><summary>Click here to learn more about dpc</summary>
@@ -64,32 +75,52 @@ You can specify any other data processing configuration file or create your own.
 </p>
 </details>
 
-Processed data will be saved in <em>src/data_processing/processed_data</em>. If the dpc name is <em>anyname.ini</em>, then there will be created three of the following files - <em>anyname_train.csv</em>, <em>anyname_val.csv</em>, and <em>anyname_test.csv</em>.
+Processed data is saved in <em>src/data_processing/processed_data</em>. If the dpc name was <em>anyname.ini</em>, then there are created three of the following files - <em>anyname_train.csv</em>, <em>anyname_val.csv</em>, and <em>anyname_test.csv</em>.
 
 _ _ _
 
-<strong>Second, run model training</strong>. 
+<strong>Second, run model training</strong>.  The command takes for input the name of a data processing configuration file, and the name of a <em>model training configuration (mtc)</em> file which can be found in  <em>src/model_training/configs</em>:
 
 ```console
-python3 main.py -r=model_training -dpc=I_V_T.ini -mtc=config1.ini
+python3 main.py -r=model_training -dpc=I_V_T.ini -mtc=I_V_T.ini
 ```
+
+<details><summary>Click here to learn more about mtc</summary>
+<p>
+
+You can specify any other model training configuration file or create your own. Each configuration file should contain the following:
+<div align="center">
+
+| Property  | Value | Example
+| ------------- | :-------------: | -------------: |
+| num_hidden_layers  | Number of hidden layers in neural network | 2 |
+| units_hidden_layers  | Number of units in each hidden layer | [80, 80] |
+| activations_hidden_layers  | Activations of each hidden layer | ["tanh", "leaky_relu"] |
+| activation_response_layer  | Activation of response layer | "clipped_relu" |
+| epochs  | Number of epochs | 30 |
+| batch_size  | Batch size | 64 |
+| learning_rate  | Learning rate | 0.003311 |
+
+</div>
+
+</p>
+</details>
+
+Trained model is saved in <em>src/model_training/trained_models</em>. If the dpc name is <em>anyname1.ini</em> and mtc name were <em>anyname2.ini</em>, then the name of the saved model is <em>anyname1_anyname2</em>.
 
 _ _ _
 
-<strong>Third, run model inference</strong>. 
+<strong>Third, run model inference</strong>. The command takes for input dpc and mtc. There is NO inference configuration file. Running this command simply makes predictions on a test dataset:
 
 ```console
-python3 main.py -r=inference -dpc=I_V_T.ini -mtc=config1.ini
+python3 main.py -r=inference -dpc=I_V_T.ini -mtc=I_V_T.ini
 ```
 
-## Hyperparameter Tuning
-
-> __Note__
-> Hyperparameter tuning is a long-running process that takes hours so in <em>src/model_training/configs</em> we included some of the best hyperparameter configurations we found. <strong>You can skip this section if the model you trained in <em>Quick Start</em> satisfies your requirements.</strong> Otherwise, follow instructions in this section on how to run tuning and find good neural network architectures.
+Test dataset with the model predictions is saved in <em>src/inference/results</em>. If the dpc name was <em>anyname1.ini</em> and mtc name was <em>anyname2.ini</em>, then the name of saved results is <em>anyname1_anyname2.csv</em>. To analyze the results we included Jupyter notebook <em>results_visualization.ipynb</em>.
 
 ## Contributing
 
-Feel free to create a pull request or start a discussion in issues section.
+Feel free to start a [discussion](https://github.com/uw-mad-dash/Battery-SoC-Estimation/discussions), or create a [pull request](https://github.com/uw-mad-dash/Battery-SoC-Estimation/pulls).
 
 ## License
 
