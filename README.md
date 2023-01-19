@@ -12,7 +12,7 @@ This repository contains the data and code for the paper [Estimating Battery Sta
 </p>
 
 ## Data
-The [LiPo 5450 mAh cell](https://maxamps.com/products/lipo-5450-1s-3-7v-battery) data can be found in <em>data</em> directory 👀. To understand data better, we provided a [Jupyter](https://jupyter.org/) notebook <em>data_visualization.ipynb</em> in <em>notebooks</em> directory. We used [Jupyter Dash](https://github.com/plotly/jupyter-dash) library which allows to create interactive plots.
+The [LiPo 5450 mAh cell](https://maxamps.com/products/lipo-5450-1s-3-7v-battery) data can be found in <em>data</em> directory 👀. We collected 48 discharging-charging cycles for CRates 1, 2, 3, and 4. The measurements were recorded at 1 second rate. To understand data better, we provided a [Jupyter](https://jupyter.org/) notebook <em>data_visualization.ipynb</em> in <em>notebooks</em> directory. We used [Jupyter Dash](https://github.com/plotly/jupyter-dash) library which allows to create interactive plots.
 
 <div align="center">
 
