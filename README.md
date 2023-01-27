@@ -1,4 +1,5 @@
 # Battery-SoC-Estimation 🔋
+[![DOI](https://zenodo.org/badge/589705095.svg)](https://zenodo.org/badge/latestdoi/589705095)
 
 This repository contains the data and code for the paper [Estimating Battery State-of-Charge within 1% using Machine Learning and Physics-based Models (SAE'23)](https://www.sae.org/publications/technical-papers/content/2023-01-0522/). Specifically, here we included LiPo 5450 mAh cell dataset, Python framework for building neural network model that predicts battery SoC, and the best hyperparameters we found during hyperparameter tuning.
 
