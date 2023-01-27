@@ -59,17 +59,17 @@ def run_data_processing(dpc: str):
         if "_BWF" in feature:
             logger.info(f"Applying Butterworth filter")
             for process in ["train", "val", "test"]:
-                col_values_to_filter = dfs[process][feature.replace("_MA", "")]
+                col_values_to_filter = dfs[process][feature.replace("_BWF", "")]
                 cutoff_fs = json.loads(dpc_values["bwf_cutoff_fs"])[feature]
                 order = json.loads(dpc_values["bwf_order"])[feature]
                 dfs[process][feature] = get_bwf(col_values_to_filter, cutoff_fs, order)
         if "_H" in feature:
             logger.info(f"Applying Hampel filter")
             for process in ["train", "val", "test"]:
-                col_values_to_filter = dfs[process][feature.replace("_MA", "")]
+                col_values_to_filter = dfs[process][feature.replace("_H", "")]
                 window_size = json.loads(dpc_values["h_window_size"])[feature]
                 n = json.loads(dpc_values["h_n"])[feature]
-                dfs[process][feature] = get_bwf(col_values_to_filter, window_size, n)
+                dfs[process][feature] = get_hampel(col_values_to_filter, window_size, n)
 
     # Save processed data
     logger.info(f"Saving train, val, and test datasets")

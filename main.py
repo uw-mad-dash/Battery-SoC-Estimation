@@ -3,6 +3,7 @@ import argparse
 from src.data_processing.run import run_data_processing
 from src.model_training.run import run_model_training
 from src.inference.run import run_inference
+from src.hyperparameter_tuning.run import run_hyperparameter_tuning
 
 if __name__ == "__main__":
 
@@ -16,6 +17,7 @@ if __name__ == "__main__":
             "data_processing",
             "model_training",
             "inference",
+            "hyperparameter_tuning",
         ],
         required=True,
     )
@@ -34,6 +36,16 @@ if __name__ == "__main__":
         "--inference_config",
         help="What is the name of the inference config file?",
     )
+    parser.add_argument(
+        "-htc",
+        "--hyperparameter_tuning_config",
+        help="What is the name of the hyperparameter tuning config file?",
+    )
+    parser.add_argument(
+        "-wu",
+        "--wandb_user",
+        help="What is the name of the Weights&Biases user?",
+    )
 
     args = parser.parse_args()
 
@@ -49,6 +61,13 @@ if __name__ == "__main__":
         run_inference(
             dpc=args.data_processing_config,
             mtc=args.model_training_config,
+        )
+    elif args.run == "hyperparameter_tuning":
+        run_hyperparameter_tuning(
+            dpc=args.data_processing_config,
+            mtc=args.model_training_config,
+            htc=args.hyperparameter_tuning_config,
+            wandb_user=args.wandb_user,
         )
     else:
         raise Exception(

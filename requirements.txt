@@ -4,3 +4,4 @@ pandas==1.4.3
 scipy==1.8.1
 tensorflow==2.5.0
 hampel==0.0.5
+wandb==0.12.21
